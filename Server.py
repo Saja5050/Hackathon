@@ -20,7 +20,7 @@ def sendto_pack_msg(port):
 def run_Server(server_port, broadcast_port):
     BroadCastSocket = create_broadcast_socket()
     message = sendto_pack_msg(4999)
-    ServerSocket = socket.socket()  # get instance
+    ServerSocket = socket.socket()  # get instance a
     ServerSocket.bind(("", server_port))  # bind host address and port together
     ServerSocket.setblocking(False)  # set socket to non-blocking mode
     ServerSocket.listen(5)  # configure how many client the server can listen simultaneously
