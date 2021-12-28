@@ -66,46 +66,40 @@ def startGame():
     global stop
     
     print( Fore.GREEN+Style.BRIGHT+"Game Started"+Style.RESET_ALL)
-    arr=[]
+    
     for i in clients:
         i.send(b"Welcome To Game !!!")
     
   
-        # player1=clients[0]
-        # player2=clients[1]
+    player1=clients[0]
+    player2=clients[0]
 
-        th=threading.Thread(target=client_connected,args=(i,))
-        th.start()
-        arr.append(th)
-    for th in arr:
-        th.join() #wait till thread finish!
-
-
-
-    # stop =False
-    # while(not stop):
+    th=threading.Thread(target=StopGame,args=())
+    th.start()
+    stop =False
+    while(not stop):
       
-    #     try:
-    #         data = player1.recv(1024).decode('utf-8')  # receive response #leeeh?
-    #         print("wow player 1  pressed !!! "+ data)
-    #     except ConnectionResetError:
-    #         print("Client Disconnected Game over ")
-    #         break
-    #     except:
-    #         pass
+        try:
+            data = player1.recv(1024).decode('utf-8')  # receive response
+            print("wow player 1  pressed !!! "+ data)
+        except ConnectionResetError:
+            print("Client Disconnected Game over ")
+            break
+        except:
+            pass
 
-    #     try:
-    #         data = player2.recv(1024).decode('utf-8')  # receive response
-    #         print("wow player 1  pressed !!! "+ data)
+        try:
+            data = player2.recv(1024).decode('utf-8')  # receive response
+            print("wow player 1  pressed !!! "+ data)
 
-    #     except ConnectionResetError:
-    #         print("Client Disconnected Game over ")
-    #         break
-    #     except:
-    #         pass
+        except ConnectionResetError:
+            print("Client Disconnected Game over ")
+            break
+        except:
+            pass
 
 
-    
+
     print("Game Ends , discoenneting Clients !")
     for i in clients:
         i.close()
@@ -131,39 +125,25 @@ def StopGame():
 def client_connected(c):
     
     print("we are here")
+    data = c.recv(1024)
+    print(data.decode()+" Coneected")
+    c.setblocking(True)
     while True:
-
-        try:
-
-            data = c.recv(1024)
-            print(data.decode()+" Connected")
-            break
-        except socket.error:
-            pass
-    c.setblocking(False)
-    #send math
-    while True:
-        try:
   
-            # data received from client
-            print("before")
-            data = c.recv(1024)
-            print("after")
-            #check data
-            print("wohoo dataa sent !!!!!")
-            print(data)
-            if not data:
-                print('Bye')
-                
-                break
+        # data received from client
+        data = c.recv(1024)
+        print("wohoo dataa sent !!!!!")
+        print(data)
+        if not data:
+            print('Bye')
+            
+            break
+  
+        # reverse the given string from client
+        data = data[::-1]
     
-            # reverse the given string from client
-            data = data[::-1]
-        
-            # send back reversed string to client
-            c.send(data)
-        except socket.error:
-            pass
+        # send back reversed string to client
+        c.send(data)
   
     # connection closed
     c.close()
